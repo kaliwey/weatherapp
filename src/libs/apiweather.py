@@ -1,14 +1,16 @@
 import os
+import sys
 import requests
 import functools
 from config.config import config
 from libs.dataenums import Units
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Apiweather(object):
     """
-    The Subsystem can accept requests either from the facade or client directly.
-    In any case, to the Subsystem, the Facade is yet another client, and it's
-    not a part of the Subsystem.
+    Class for connect with Api Weather services
     """
     def __init__(self, city, country_code, units, days):
         self.city = city
@@ -31,7 +33,7 @@ class Apiweather(object):
             r.raise_for_status()
             return r
         except requests.exceptions.HTTPError as e:
-            print (e.response.text)
+            logging.info(e.response.text)
 
 
     def geocoder(func):
@@ -43,12 +45,19 @@ class Apiweather(object):
                 'appid': str(self.__apikey)
             }
             r = self._request(params, self.__geocoding_url)
-            if 200 <= r.status_code <= 299:
-                r = r.json()
-                self.__lat = r[0]["lat"] if "lat" in r[0] else None
-                self.__lon = r[0]["lon"] if "lon" in r[0] else None
-            else:
-                print(r.status_code)
+
+            try:
+                if hasattr(r, "status_code"):
+                    if 200 <= r.status_code <= 299:
+                        r = r.json()
+                        self.__lat = r[0]["lat"] if "lat" in r[0] else None
+                        self.__lon = r[0]["lon"] if "lon" in r[0] else None
+                    else:
+                        print(r.status_code)
+                else:
+                    sys.exit()
+            except Exception as e:
+                logging.info(e)
             return func(self, *args, **kwargs)
         return wrap
 
@@ -56,7 +65,7 @@ class Apiweather(object):
     @geocoder
     def getCurrentWeather(self):
         try:
-            print("getting current weather")
+            logging.debug("getting current weather")
             if (self.__lat is not None) and (self.__lon is not None):
                 params = {
                     'lat': self.__lat,
@@ -74,20 +83,21 @@ class Apiweather(object):
             
                 
             r = self._request(params, self.__weather_url, self.__current_weather_ep)
-
-            if 200 <= r.status_code <= 299:
-                r = r.json()
-                return r
+            if hasattr(r, "status_code"):
+                if 200 <= r.status_code <= 299:
+                    r = r.json()
+                    return r
+                else:
+                    print(f'Error: {r.status_code}')
             else:
-                print(f'Error: {r.status_code}')
+                sys.exit()
         except Exception as e:
-            # logging.info("Exception on login:", e)
-            print(e)
+            logging.info(e)
 
     @geocoder
     def getForecast(self):
         try:
-            print("getting forecast weather")
+            logging.debug("getting forecast weather")
             if (self.__lat is not None) and (self.__lon is not None):
                 params = {
                     'lat': self.__lat,
@@ -108,11 +118,13 @@ class Apiweather(object):
                 
             r = self._request(params, self.__weather_url, self.__forecast_weather_ep)
 
-            if 200 <= r.status_code <= 299:
-                r = r.json()
-                return r
+            if hasattr(r, "status_code"):
+                if 200 <= r.status_code <= 299:
+                    r = r.json()
+                    return r
+                else:
+                    print(f'Error: {r.status_code}')
             else:
-                print(f'Error: {r.status_code}')
+                sys.exit()
         except Exception as e:
-            # logging.info("Exception on login:", e)
-            print(e)
+            logging.info(e)

@@ -1,7 +1,7 @@
 from argparse import ArgumentParser, Action, ArgumentError
-import sys
 from libs.dataenums import Mode
-
+import sys
+import os
 class CliMeta(type):
     """
     Metaclass for limit instances to one
@@ -30,6 +30,7 @@ class Cli(metaclass=CliMeta):
     Class for command line interface
     """
     def __init__(self):
+        self.checkApiKey()
         self.parser = ArgumentParser(description=__doc__)
 
         self.parser.add_argument(
@@ -66,3 +67,11 @@ class Cli(metaclass=CliMeta):
         self.city = self.config["location"].split(",")[0]
         self.country_code = self.config["location"].split(",")[1]
         self.units = self.config["units"]
+    
+    def checkApiKey(self):
+        if len(os.getenv('APIKEY')) == 0:
+            print("Please, fill APIKEY valuen in .env file")
+            sys.exit()
+        elif len(os.getenv('APIKEY')) < 32:
+            print("APIKEY length no valid, please check it")
+            sys.exit()

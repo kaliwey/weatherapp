@@ -1,4 +1,4 @@
 Pipfile.lock
-.env
+# .env
 logs/
 *.log

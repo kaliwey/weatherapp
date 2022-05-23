@@ -27,8 +27,8 @@ if __name__ == "__main__":
             if console.mode == Mode.forecast.name:
                 printer.printOutputForecast(apiweather.getForecast())
         else:
-            print("No city or Country Code, please fill them")
+            logging.info("No city or Country Code, please fill them")
             sys.exit()
     except Exception as e:
-        logging.info(e)       
+        logging.debug(e)       
     

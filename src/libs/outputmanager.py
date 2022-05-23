@@ -50,7 +50,7 @@ class OutputManager(Apiweather,metaclass=OutputManagerMeta):
             print(f'> Weather: {data["weather"][0]["description"]}')
             print(f'> Temperature: {data["main"]["temp"]} {self.printUnitSymbol()}')
         except Exception as e:
-            print(e)
+            logging.debug(e)
     
     def printOutputForecast(self, data):
         try:
@@ -66,4 +66,4 @@ class OutputManager(Apiweather,metaclass=OutputManagerMeta):
                 print(f'> Temperature: {i["temp"]["day"]} {self.printUnitSymbol()}')
 
         except Exception as e:
-            print(e)
+            logging.debug(e)

@@ -57,7 +57,7 @@ class Apiweather(object):
                 else:
                     sys.exit()
             except Exception as e:
-                logging.info(e)
+                logging.debug(e)
             return func(self, *args, **kwargs)
         return wrap
 
@@ -89,10 +89,11 @@ class Apiweather(object):
                     return r
                 else:
                     print(f'Error: {r.status_code}')
+                    sys.exit()
             else:
                 sys.exit()
         except Exception as e:
-            logging.info(e)
+            logging.debug(e)
 
     @geocoder
     def getForecast(self):
@@ -124,7 +125,8 @@ class Apiweather(object):
                     return r
                 else:
                     print(f'Error: {r.status_code}')
+                    sys.exit()
             else:
                 sys.exit()
         except Exception as e:
-            logging.info(e)
+            logging.debug(e)

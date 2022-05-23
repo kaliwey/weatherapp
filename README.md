@@ -4,13 +4,22 @@ App to fetch some weather data from https://openweathermap.org/
 ## Download:
 
 ```
-gitclone
+git clone https://github.com/kaliwey/weatherapp.git
+```
+
+## Configuration:
+
+Set APIKEY in .env file
+
+You can obtain apikey registering on https://openweathermap.org/
+```
+APIKEY=xxxxxxxxxx
 ```
 ## Run with Python
 
-You need python 3.8 or greater
+You need python 3.8 (or greater) and pip3 installed
 ```
-pip3 install pipenv
+pipenv install
 pipenv run weatherapp forecast Santander,ES --units=metric --days=3
 ```
 ## Run with Docker-Compose

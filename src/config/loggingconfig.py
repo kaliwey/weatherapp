@@ -32,7 +32,6 @@ root = logging.getLogger()
 #root.setLevel(logging.INFO)
 #root.setLevel(logging.DEBUG)
 
-# alternatively:
 root.setLevel(min([fh.level, fh2.level, ch.level, er.level]))
 
 root.addHandler(fh)

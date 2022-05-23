@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+  weatherapp:
+    container_name: weatherapp
+    image: weatherapp_image
+    build: .
+    env_file: .env
+    entrypoint: /bin/sh
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t

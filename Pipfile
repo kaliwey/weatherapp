@@ -11,3 +11,6 @@ six = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+weatherapp = "python3 src/weatherapp.py"

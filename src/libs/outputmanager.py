@@ -19,6 +19,7 @@ class OutputManagerMeta(type):
             instance = super().__call__(*args, **kwargs)
             cls._instances[cls] = instance
         return cls._instances[cls]
+
 class OutputManager(Apiweather,metaclass=OutputManagerMeta):
 
     def __init__(self, apiweather):
@@ -28,31 +29,31 @@ class OutputManager(Apiweather,metaclass=OutputManagerMeta):
         self.days = apiweather.days
 
     @staticmethod
-    def printDate():
+    def print_date():
         today = datetime.date.today()
         return today.strftime('%b %d, %Y')
 
     @staticmethod
-    def parseTimeStampToDate(ts):
+    def parse_time_stamp_to_date(ts):
         dt = datetime.datetime.fromtimestamp(ts)
         return dt.strftime('%b %d, %Y')
 
-    def printUnitSymbol(self):
+    def print_unit_symbol(self):
         if self.units == Units.metric.name:
             return "ºC"
         if self.units == Units.imperial.name:
             return "ºF"
     
-    def printOutputCurrentWeather(self, data):
+    def print_output_current_weather(self, data):
         try:
-            print(self.printDate())
+            print(self.print_date())
             print(f'{self.city} ({self.country_code})')
             print(f'> Weather: {data["weather"][0]["description"]}')
-            print(f'> Temperature: {data["main"]["temp"]} {self.printUnitSymbol()}')
+            print(f'> Temperature: {data["main"]["temp"]} {self.print_unit_symbol()}')
         except Exception as e:
-            logging.debug(e)
+            logging.info(e)
     
-    def printOutputForecast(self, data):
+    def print_output_forecast(self, data):
         try:
             data = data["daily"]
             # Removing last n days to match max days selected by user
@@ -61,9 +62,9 @@ class OutputManager(Apiweather,metaclass=OutputManagerMeta):
 
             print(f'{self.city} ({self.country_code})')
             for i in data:
-                print(self.parseTimeStampToDate(i['dt']))
+                print(self.parse_time_stamp_to_date(i['dt']))
                 print(f'> Weather: {i["weather"][0]["main"]}')
-                print(f'> Temperature: {i["temp"]["day"]} {self.printUnitSymbol()}')
+                print(f'> Temperature: {i["temp"]["day"]} {self.print_unit_symbol()}')
 
         except Exception as e:
-            logging.debug(e)
+            logging.info(e)

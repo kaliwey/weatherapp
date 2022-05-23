@@ -22,13 +22,13 @@ if __name__ == "__main__":
             printer = OutputManager(apiweather)
 
             if console.mode == Mode.current.name:
-                printer.printOutputCurrentWeather(apiweather.getCurrentWeather())
+                printer.print_output_current_weather(apiweather.get_current_weather())
 
             if console.mode == Mode.forecast.name:
-                printer.printOutputForecast(apiweather.getForecast())
+                printer.print_output_forecast(apiweather.get_forecast())
         else:
             logging.info("No city or Country Code, please fill them")
             sys.exit()
     except Exception as e:
-        logging.debug(e)       
+        logging.info(e)       
     

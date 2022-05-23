@@ -57,13 +57,13 @@ class Apiweather(object):
                 else:
                     sys.exit()
             except Exception as e:
-                logging.debug(e)
+                logging.info(e)
             return func(self, *args, **kwargs)
         return wrap
 
     
     @geocoder
-    def getCurrentWeather(self):
+    def get_current_weather(self):
         try:
             logging.debug("getting current weather")
             if (self.__lat is not None) and (self.__lon is not None):
@@ -93,10 +93,10 @@ class Apiweather(object):
             else:
                 sys.exit()
         except Exception as e:
-            logging.debug(e)
+            logging.info(e)
 
     @geocoder
-    def getForecast(self):
+    def get_forecast(self):
         try:
             logging.debug("getting forecast weather")
             if (self.__lat is not None) and (self.__lon is not None):
@@ -129,4 +129,4 @@ class Apiweather(object):
             else:
                 sys.exit()
         except Exception as e:
-            logging.debug(e)
+            logging.info(e)

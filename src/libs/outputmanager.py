@@ -1,5 +1,3 @@
-
-from operator import length_hint
 from libs.apiweather import Apiweather
 from libs.dataenums import Units
 import datetime
@@ -39,10 +37,10 @@ class OutputManager(Apiweather,metaclass=OutputManagerMeta):
         return dt.strftime('%b %d, %Y')
 
     def print_unit_symbol(self):
-        if self.units == Units.metric.name:
-            return "ºC"
         if self.units == Units.imperial.name:
             return "ºF"
+        else:
+            return "ºC"
     
     def print_output_current_weather(self, data):
         try:
@@ -51,14 +49,15 @@ class OutputManager(Apiweather,metaclass=OutputManagerMeta):
             print(f'> Weather: {data["weather"][0]["description"]}')
             print(f'> Temperature: {data["main"]["temp"]} {self.print_unit_symbol()}')
         except Exception as e:
-            logging.info(e)
+            logging.error(e)
     
     def print_output_forecast(self, data):
         try:
             data = data["daily"]
             # Removing last n days to match max days selected by user
-            days_to_remove = len(data) - self.days
-            del data[-days_to_remove:]
+            if len(data) > self.days:
+                days_to_remove = len(data) - self.days
+                del data[-days_to_remove:]
 
             print(f'{self.city} ({self.country_code})')
             for i in data:
@@ -67,4 +66,5 @@ class OutputManager(Apiweather,metaclass=OutputManagerMeta):
                 print(f'> Temperature: {i["temp"]["day"]} {self.print_unit_symbol()}')
 
         except Exception as e:
-            logging.info(e)
+            print(e)
+            logging.error(e)

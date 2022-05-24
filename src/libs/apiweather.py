@@ -12,7 +12,7 @@ class Apiweather(object):
     """
     Class for connect with Api Weather services
     """
-    def __init__(self, city, country_code, units, days):
+    def __init__(self, city, country_code, units, days=""):
         self.city = city
         self.country_code = country_code
         self.units = units or Units.default()
@@ -33,8 +33,18 @@ class Apiweather(object):
             r.raise_for_status()
             return r
         except requests.exceptions.HTTPError as e:
-            logging.info(e.response.text)
+            logging.error(e.response.text)
 
+    def _check_response(self, response):
+        if hasattr(response, "status_code"):
+            if 200 <= response.status_code <= 299:
+                return True
+            else:
+                logging.info(f'Error: {response.status_code}')
+                return False
+        else:
+            logging.info(f'Bad response')
+            return False
 
     def geocoder(func):
         @functools.wraps(func)
@@ -53,11 +63,11 @@ class Apiweather(object):
                         self.__lat = r[0]["lat"] if "lat" in r[0] else None
                         self.__lon = r[0]["lon"] if "lon" in r[0] else None
                     else:
-                        print(r.status_code)
+                        logging.info(r.status_code)
                 else:
                     sys.exit()
             except Exception as e:
-                logging.info(e)
+                logging.error(e)
             return func(self, *args, **kwargs)
         return wrap
 
@@ -83,17 +93,10 @@ class Apiweather(object):
             
                 
             r = self._request(params, self.__weather_url, self.__current_weather_ep)
-            if hasattr(r, "status_code"):
-                if 200 <= r.status_code <= 299:
-                    r = r.json()
-                    return r
-                else:
-                    print(f'Error: {r.status_code}')
-                    sys.exit()
-            else:
-                sys.exit()
+            
+            return r.json() if self._check_response(r) else sys.exit()
         except Exception as e:
-            logging.info(e)
+            logging.error(e)
 
     @geocoder
     def get_forecast(self):
@@ -118,15 +121,7 @@ class Apiweather(object):
             
                 
             r = self._request(params, self.__weather_url, self.__forecast_weather_ep)
+            return r.json() if self._check_response(r) else sys.exit()
 
-            if hasattr(r, "status_code"):
-                if 200 <= r.status_code <= 299:
-                    r = r.json()
-                    return r
-                else:
-                    print(f'Error: {r.status_code}')
-                    sys.exit()
-            else:
-                sys.exit()
         except Exception as e:
-            logging.info(e)
+            logging.error(e)

@@ -4,6 +4,7 @@ from libs.cli import Cli
 from libs.apiweather import Apiweather
 from libs.outputmanager import OutputManager
 from libs.dataenums import Mode
+from libs.bootsetup import BootSetup
 import sys
 import logging
 from config import loggingconfig
@@ -11,13 +12,15 @@ from config import loggingconfig
 
 if __name__ == "__main__":
 
+    BootSetup().checkApiKey()
     console = Cli()
 
     logging.debug(sys.argv)
-    logging.debug(console.config)
+    logging.debug(console.inputargv)
 
     try:
         if (console.city) and (console.country_code):
+
             apiweather = Apiweather(console.city, console.country_code, console.units, console.days)
             printer = OutputManager(apiweather)
 
@@ -29,6 +32,7 @@ if __name__ == "__main__":
         else:
             logging.info("No city or Country Code, please fill them")
             sys.exit()
+
     except Exception as e:
-        logging.info(e)       
+        logging.error(e)       
     

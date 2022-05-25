@@ -1,7 +1,6 @@
 from argparse import ArgumentParser, Action, ArgumentError
-from libs.dataenums import Mode
+from libs.enumsfile import Mode
 import sys
-import os
 class CliMeta(type):
     """
     Metaclass for limit instances to one

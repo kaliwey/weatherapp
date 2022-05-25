@@ -36,7 +36,7 @@ pipenv run weatherapp current Madrid,ES
 pipenv run weatherapp -h
 ```
 
-### Unit testing
+## Unit testing
 ```
 pipenv run pytest -vv tests
 ```
